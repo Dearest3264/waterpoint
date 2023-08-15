@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WaterPoint NGO</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>WaterPoint NGO</h1>
+    <h2>Interested Members</h2>
+    <input type="text" id="memberName" placeholder="Name">
+    <input type="email" id="memberEmail" placeholder="Email">
+    <input type="tel" id="memberPhone" placeholder="Phone">
+    <button onclick="addMember()">Add Member</button>
+    
+    <h2>Completed Borehole Projects</h2>
+    <input type="text" id="projectName" placeholder="Project Name">
+    <input type="date" id="completionDate">
+    <button onclick="addProject()">Add Project</button>
+
+    <h2>Members</h2>
+    <ul id="membersList"></ul>
+
+    <h2>Projects</h2>
+    <ul id="projectsList"></ul>
+
+    <script>
+        // JavaScript code goes here
+        function addMember() {
+            const name = document.getElementById('memberName').value;
+            const email = document.getElementById('memberEmail').value;
+            const phone = document.getElementById('memberPhone').value;
+
+            if (!name || !email || !phone) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            const member = {
+                name,
+                email,
+                phone
+            };
+
+            // Get existing members from local storage
+            const existingMembers = JSON.parse(localStorage.getItem('members')) || [];
+
+            // Add the new member
+            existingMembers.push(member);
+
+            // Save updated members list to local storage
+            localStorage.setItem('members', JSON.stringify(existingMembers));
+
+            // Clear input fields
+            document.getElementById('memberName').value = '';
+            document.getElementById('memberEmail').value = '';
+            document.getElementById('memberPhone').value = '';
+
+            // Update the members list on the page
+            updateMembersList();
+        }
+
+        function addProject() {
+            const projectName = document.getElementById('projectName').value;
+            const completionDate = document.getElementById('completionDate').value;
+
+            if (!projectName || !completionDate) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            const project = {
+                projectName,
+                completionDate
+            };
+
+            // Get existing projects from local storage
+            const existingProjects = JSON.parse(localStorage.getItem('projects')) || [];
+
+            // Add the new project
+            existingProjects.push(project);
+
+            // Save updated projects list to local storage
+            localStorage.setItem('projects', JSON.stringify(existingProjects));
+
+            // Clear input fields
+            document.getElementById('projectName').value = '';
+            document.getElementById('completionDate').value = '';
+
+            // Update the projects list on the page
+            updateProjectsList();
+        }
+
+        function updateMembersList() {
+            const membersList = document.getElementById('membersList');
+            const members = JSON.parse(localStorage.getItem('members')) || [];
+            membersList.innerHTML = '';
+
+            for (const member of members) {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${member.name} - Email: ${member.email}, Phone: ${member.phone}`;
+                membersList.appendChild(listItem);
+            }
+        }
+
+        function updateProjectsList() {
+            const projectsList = document.getElementById('projectsList');
+            const projects = JSON.parse(localStorage.getItem('projects')) || [];
+            projectsList.innerHTML = '';
+
+            for (const project of projects) {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${project.projectName} - Completed on: ${project.completionDate}`;
+                projectsList.appendChild(listItem);
+            }
+        }
+
+        // Load initial data on page load
+        updateMembersList();
+        updateProjectsList();
+    </script>
+</body>
+</html>
